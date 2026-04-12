@@ -83,16 +83,41 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Change nav background on scroll
+    // Change nav background on scroll - respects system theme
     const navbar = document.querySelector('.navbar');
+    const darkMode = window.matchMedia('(prefers-color-scheme: dark)');
+
+    const getNavColors = () => {
+        if (darkMode.matches) {
+            return {
+                scrolled: 'rgba(7, 9, 19, 0.97)',
+                shadow: '0 4px 30px rgba(0, 0, 0, 0.5)',
+                normal: 'rgba(7, 9, 19, 0.85)'
+            };
+        }
+        return {
+            scrolled: 'rgba(255, 255, 255, 0.97)',
+            shadow: '0 4px 30px rgba(0, 0, 0, 0.06)',
+            normal: 'rgba(255, 255, 255, 0.85)'
+        };
+    };
+
     window.addEventListener('scroll', () => {
+        const colors = getNavColors();
         if (window.scrollY > 50) {
-            navbar.style.background = 'rgba(7, 9, 19, 0.95)';
-            navbar.style.boxShadow = '0 4px 30px rgba(0, 0, 0, 0.5)';
+            navbar.style.background = colors.scrolled;
+            navbar.style.boxShadow = colors.shadow;
         } else {
-            navbar.style.background = 'rgba(7, 9, 19, 0.8)';
+            navbar.style.background = colors.normal;
             navbar.style.boxShadow = 'none';
         }
+    });
+
+    // Also update nav if system theme changes while page is open
+    darkMode.addEventListener('change', () => {
+        const colors = getNavColors();
+        navbar.style.background = colors.normal;
+        navbar.style.boxShadow = 'none';
     });
 
     // Update copyright year dynamically
@@ -137,11 +162,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 splashScreen.style.display = 'none';
             }, 600);
         };
-        // Wait at least a tiny bit for the animation to be appreciated
         if (document.readyState === 'complete') {
-            setTimeout(hideSplash, 800);
+            setTimeout(hideSplash, 1200);
         } else {
-            window.addEventListener('load', () => setTimeout(hideSplash, 800));
+            window.addEventListener('load', () => setTimeout(hideSplash, 1200));
         }
     }
 });
