@@ -57,7 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const formData = new FormData(contactForm);
             
-            fetch(contactForm.action || 'https://formspree.io/f/YOUR_FORMSPREE_ID', {
+            fetch(contactForm.action, {
                 method: 'POST',
                 body: formData,
                 headers: {
