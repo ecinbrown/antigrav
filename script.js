@@ -48,25 +48,38 @@ document.addEventListener('DOMContentLoaded', () => {
         contactForm.addEventListener('submit', (e) => {
             e.preventDefault();
             
-            // Simple form validation feedback
+            // Use Formspree via AJAX
             const submitBtn = contactForm.querySelector('.submit-btn');
             const originalText = submitBtn.textContent;
             
             submitBtn.textContent = 'Sending...';
             submitBtn.disabled = true;
+
+            const formData = new FormData(contactForm);
             
-            // Simulate an API call
-            setTimeout(() => {
-                submitBtn.textContent = 'Request Submitted!';
-                submitBtn.style.background = 'var(--whatsapp)';
-                
-                setTimeout(() => {
+            fetch(contactForm.action || 'https://formspree.io/f/YOUR_FORMSPREE_ID', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'Accept': 'application/json'
+                }
+            }).then(response => {
+                if (response.ok) {
+                    submitBtn.textContent = 'Request Submitted!';
+                    submitBtn.style.background = 'var(--whatsapp)';
                     contactForm.reset();
+                } else {
+                    submitBtn.textContent = 'Oops! Error.';
+                }
+            }).catch(error => {
+                submitBtn.textContent = 'Oops! Network Error.';
+            }).finally(() => {
+                setTimeout(() => {
                     submitBtn.textContent = originalText;
                     submitBtn.style.background = '';
                     submitBtn.disabled = false;
                 }, 3000);
-            }, 1500);
+            });
         });
     }
 
@@ -86,7 +99,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const copyrightYear = document.querySelector('.footer-bottom p');
     if (copyrightYear) {
         const year = new Date().getFullYear();
-        copyrightYear.innerHTML = `&copy; ${year} Webzone Adventures. All rights reserved.`;
+        copyrightYear.innerHTML = `&copy; ${year} Webzone Ventures. All rights reserved.`;
     }
 
     // Initialize 3D interaction for cards
@@ -98,5 +111,37 @@ document.addEventListener('DOMContentLoaded', () => {
             "max-glare": 0.15,
             scale: 1.02
         });
+    }
+
+    // FAQ Accordion Logic
+    const faqItems = document.querySelectorAll('.faq-item');
+    faqItems.forEach(item => {
+        const question = item.querySelector('.faq-question');
+        question.addEventListener('click', () => {
+            const isActive = item.classList.contains('active');
+            // Close all others
+            faqItems.forEach(faq => faq.classList.remove('active'));
+            // Toggle current
+            if (!isActive) {
+                item.classList.add('active');
+            }
+        });
+    });
+
+    // Splash Screen Logic
+    const splashScreen = document.getElementById('splash-screen');
+    if (splashScreen) {
+        const hideSplash = () => {
+            splashScreen.style.opacity = '0';
+            setTimeout(() => {
+                splashScreen.style.display = 'none';
+            }, 600);
+        };
+        // Wait at least a tiny bit for the animation to be appreciated
+        if (document.readyState === 'complete') {
+            setTimeout(hideSplash, 800);
+        } else {
+            window.addEventListener('load', () => setTimeout(hideSplash, 800));
+        }
     }
 });

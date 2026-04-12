@@ -30,8 +30,16 @@ html {
 body {
     overflow-x: hidden;
     line-height: 1.6;
-    background: radial-gradient(circle at top left, #1e293b 0%, #0f172a 100%);
+    background: linear-gradient(135deg, #050505, #0a1128, #100514, #051012, #050505);
+    background-size: 400% 400%;
+    animation: gradientShift 20s ease infinite;
     min-height: 100vh;
+}
+
+@keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
 }
 
 .container {
@@ -89,6 +97,8 @@ body {
 }
 
 .logo {
+    display: flex;
+    align-items: center;
     font-size: 1.5rem;
     font-weight: 800;
     color: var(--text-main);
@@ -98,6 +108,32 @@ body {
 
 .logo span {
     color: var(--primary);
+}
+
+.truck-logo {
+    margin-right: 12px;
+    animation: driveIn 2s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    transform: translateX(-150px) skewX(20deg);
+    opacity: 0;
+}
+
+@keyframes driveIn {
+    0% { transform: translateX(-150px) skewX(20deg); opacity: 0; }
+    30% { opacity: 1; }
+    80% { transform: translateX(5px) skewX(-5deg); }
+    100% { transform: translateX(0) skewX(0); opacity: 1; }
+}
+
+.speed-lines line {
+    stroke-dasharray: 10;
+    stroke-dashoffset: 10;
+    animation: speedFade 1.5s ease-out forwards;
+    animation-delay: 0.5s;
+}
+
+@keyframes speedFade {
+    0% { stroke-dashoffset: 10; opacity: 1; }
+    100% { stroke-dashoffset: -10; opacity: 0; }
 }
 
 .nav-links {
@@ -627,6 +663,7 @@ footer {
     opacity: 0;
     transform: translateY(30px);
     transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    will-change: opacity, transform;
 }
 
 .fade-in.visible {
@@ -700,7 +737,7 @@ footer {
         left: -100%;
         width: 100%;
         height: 100vh;
-        background: rgba(255, 255, 255, 0.98);
+        background: rgba(15, 23, 42, 0.98);
         backdrop-filter: blur(20px);
         -webkit-backdrop-filter: blur(20px);
         flex-direction: column;
@@ -725,12 +762,12 @@ footer {
     .mobile-menu-btn.active .hamburger::before {
         transform: rotate(45deg);
         top: 0;
-        background: #1e293b;
+        background: var(--text-main);
     }
     .mobile-menu-btn.active .hamburger::after {
         transform: rotate(-45deg);
         top: 0;
-        background: #1e293b;
+        background: var(--text-main);
     }
 
     .hero h1 {
@@ -745,4 +782,147 @@ footer {
     .btn {
         width: 100%;
     }
+}
+
+/* Splash Screen */
+#splash-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: #020202;
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: opacity 0.6s ease;
+}
+
+.splash-truck {
+    color: var(--primary);
+    width: 60px;
+    height: 60px;
+    animation: driveAcross 2s ease-in-out infinite;
+}
+
+@keyframes driveAcross {
+    0% { transform: translateX(-80px) skewX(10deg); opacity: 0; }
+    30% { opacity: 1; }
+    70% { opacity: 1; }
+    100% { transform: translateX(80px) skewX(-10deg); opacity: 0; }
+}
+
+/* Floating WhatsApp */
+.floating-whatsapp {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 60px;
+    height: 60px;
+    background-color: var(--whatsapp);
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4);
+    z-index: 900;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.floating-whatsapp:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 20px rgba(37, 211, 102, 0.6);
+}
+
+.floating-whatsapp svg {
+    width: 32px;
+    height: 32px;
+}
+
+/* Reviews */
+.reviews-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 32px;
+}
+
+.review-card {
+    padding: 40px;
+    border-radius: 24px;
+    position: relative;
+}
+
+.quote-icon {
+    font-size: 3rem;
+    color: var(--primary);
+    opacity: 0.3;
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    font-family: inherit;
+}
+
+.review-text {
+    font-size: 1.1rem;
+    color: var(--text-main);
+    margin-bottom: 24px;
+    position: relative;
+    z-index: 1;
+}
+
+.review-author {
+    font-weight: 800;
+    color: var(--primary);
+}
+
+/* FAQ Accordion */
+.faq-container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.faq-item {
+    background: var(--bg-card);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    margin-bottom: 16px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.faq-question {
+    padding: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: var(--text-main);
+    user-select: none;
+}
+
+.faq-icon {
+    font-size: 1.5rem;
+    color: var(--primary);
+    transition: transform 0.3s ease;
+}
+
+.faq-item.active .faq-icon {
+    transform: rotate(45deg);
+}
+
+.faq-answer {
+    padding: 0 24px;
+    max-height: 0;
+    overflow: hidden;
+    color: var(--text-muted);
+    transition: max-height 0.3s ease, padding 0.3s ease;
+}
+
+.faq-item.active .faq-answer {
+    padding: 0 24px 24px;
+    max-height: 200px; /* arbitrary high value for transition */
 }
